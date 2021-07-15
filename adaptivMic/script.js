@@ -115,6 +115,9 @@ if (navigator.mediaDevices.getUserMedia) {
   console.log('getUserMedia not supported on your browser!');
 }
 
+const counterDiv = document.querySelector('#counter');
+let counter = 0;
+let locked = false;
 function visualize(stream) {
   if (!audioCtx) {
     audioCtx = new AudioContext();
@@ -166,7 +169,7 @@ function visualize(stream) {
       let v = dataArray[i] / 128.0;
       let y = v * HEIGHT / 2;
 
-      if (v > 1.40) {
+      if (v > 1.6) {
         console.log('algo', v);
         mayores.push(v);
       }
@@ -180,11 +183,14 @@ function visualize(stream) {
       x += sliceWidth;
     }
 
-    if (mayores.length > 5) {
+    if (mayores.length > 5 && !locked) {
       document.body.style.backgroundColor = 'red';
+      locked = true;
       setTimeout(() => {
         document.body.style.backgroundColor = 'white';
-      }, 1000)
+        counterDiv.innerHTML = ++counter;
+        locked = false
+      }, 300)
     }
 
 
